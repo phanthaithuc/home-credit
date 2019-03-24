@@ -3,15 +3,11 @@
     command: python train.py {parameters}
     
     inputs:
-      - name: train-set-1
+      - name: train-set
         default: swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/application_test.csv
-        optional: swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/application_train.csv   
-        optional: swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/bureau.csv
-        optional: swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/bureau_balance.csv 
-        optional: swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/installments_payments.csv
-        optional: swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/POS_CASH_balance.csv
-        optional: swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/previous_application.csv
-        optional: swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/credit_card_balance.csv
+        optional: true
+        url: swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/application_train.csv   
+       
         
         
     name: Train model

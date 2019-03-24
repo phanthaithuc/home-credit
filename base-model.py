@@ -226,7 +226,7 @@ def display_importances(feature_importance_df_):
                 data=best_features.sort_values(by="importance", ascending=False))
     plt.title('LightGBM Features (avg over folds)')
     plt.tight_layout()
-    plt.savefig('/valohai/outputs/base-model/lgbm_importances.png')
+    plt.savefig('/valohai/outputs/lgbm_importances.png')
 
 
 def display_roc_curve(y_, oof_preds_, folds_idx_):
@@ -284,20 +284,23 @@ def display_precision_recall(y_, oof_preds_, folds_idx_):
     plt.legend(loc="best")
     plt.tight_layout()
     
-    plt.savefig('/valohai/outputs/base-model/recall_precision_curve.png')
+    plt.savefig('/valohai/outputs/recall_precision_curve.png')
 
 if __name__ == '__main__':
     gc.enable()
     # Build model inputs
+    print("Running base model")
+
     data, test, y = build_model_input()
     # Create Folds
     folds = KFold(n_splits=5, shuffle=True, random_state=546789)
     # Train model and get oof and test predictions
     oof_preds, test_preds, importances = train_model(data, test, y, folds)
     # Save test predictions
-    test_preds.to_csv('/valohai/outputs/base-model/first_submission.csv', index=False)
+    test_preds.to_csv('valohai/outputs/base-model/first_submission.csv', index=False)
     # Display a few graphs
     folds_idx = [(trn_idx, val_idx) for trn_idx, val_idx in folds.split(data)]
     display_importances(feature_importance_df_=importances)
     display_roc_curve(y_=y, oof_preds_=oof_preds, folds_idx_=folds_idx)
     display_precision_recall(y_=y, oof_preds_=oof_preds, folds_idx_=folds_idx)
+    

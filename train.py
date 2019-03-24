@@ -441,7 +441,7 @@ def display_importances(feature_importance_df_):
     sns.barplot(x="importance", y="feature", data=best_features.sort_values(by="importance", ascending=False))
     plt.title('LightGBM Features (avg over folds)')
     plt.tight_layout
-    plt.savefig('lgbm_importances01.png')
+    plt.savefig('/valohai/outputs/lgbm_importances01.png')
 
 
 def main(debug = False):
@@ -485,7 +485,7 @@ def main(debug = False):
         feat_importance = kfold_lightgbm(df, num_folds= 5, stratified= False, debug= debug)
 
 if __name__ == "__main__":
-    submission_file_name = "submission_with selected_features.csv"
+    submission_file_name = "/valohai/outputs/submission_with selected_features.csv"
     with timer("Full model run"):
         main()
 

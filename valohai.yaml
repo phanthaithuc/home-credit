@@ -4,9 +4,7 @@
     
     inputs:
       - name: train-set
-        default: swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/application_test.csv
-        optional: true
-        input: swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/application_train.csv      
+        default: swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/
         
         
     name: Train model

@@ -11,8 +11,8 @@ import gc
 
 
 
-def build_model_/valohai/inputs():
-    buro_bal = pd.read_csv('/valohai/inputs/bureau_balance.csv')
+def build_model_input():
+    buro_bal = pd.read_csv('/valohai/inputs/train-set/bureau_balance.csv')
     print('Buro bal shape : ', buro_bal.shape)
     
     print('transform to dummies')
@@ -30,7 +30,7 @@ def build_model_/valohai/inputs():
     gc.collect()
     
     print('Read Bureau')
-    buro = pd.read_csv('/valohai/inputs/bureau.csv')
+    buro = pd.read_csv('/valohai/inputs/train-set/bureau.csv')
     
     print('Go to dummies')
     buro_credit_active_dum = pd.get_dummies(buro.CREDIT_ACTIVE, prefix='ca_')
@@ -58,7 +58,7 @@ def build_model_/valohai/inputs():
     gc.collect()
     
     print('Read prev')
-    prev = pd.read_csv('/valohai/inputs/previous_application.csv')
+    prev = pd.read_csv('/valohai/inputs/train-set/previous_application.csv')
     
     prev_cat_features = [
         f_ for f_ in prev.columns if prev[f_].dtype == 'object'
@@ -85,7 +85,7 @@ def build_model_/valohai/inputs():
     gc.collect()
     
     print('Reading POS_CASH')
-    pos = pd.read_csv('/valohai/inputs/POS_CASH_balance.csv')
+    pos = pd.read_csv('/valohai/inputs/train-set/POS_CASH_balance.csv')
     
     print('Go to dummies')
     pos = pd.concat([pos, pd.get_dummies(pos['NAME_CONTRACT_STATUS'])], axis=1)
@@ -101,7 +101,7 @@ def build_model_/valohai/inputs():
     gc.collect()
     
     print('Reading CC balance')
-    cc_bal = pd.read_csv('/valohai/inputs/credit_card_balance.csv')
+    cc_bal = pd.read_csv('/valohai/inputs/train-set/credit_card_balance.csv')
     
     print('Go to dummies')
     cc_bal = pd.concat([cc_bal, pd.get_dummies(cc_bal['NAME_CONTRACT_STATUS'], prefix='cc_bal_status_')], axis=1)
@@ -117,7 +117,7 @@ def build_model_/valohai/inputs():
     gc.collect()
     
     print('Reading Installments')
-    inst = pd.read_csv('/valohai/inputs/installments_payments.csv')
+    inst = pd.read_csv('/valohai/inputs/train-set/installments_payments.csv')
     nb_prevs = inst[['SK_ID_CURR', 'SK_ID_PREV']].groupby('SK_ID_CURR').count()
     inst['SK_ID_PREV'] = inst['SK_ID_CURR'].map(nb_prevs['SK_ID_PREV'])
     
@@ -125,8 +125,8 @@ def build_model_/valohai/inputs():
     avg_inst.columns = ['inst_' + f_ for f_ in avg_inst.columns]
     
     print('Read data and test')
-    data = pd.read_csv('/valohai/inputs/application_train.csv')
-    test = pd.read_csv('/valohai/inputs/application_test.csv')
+    data = pd.read_csv('/valohai/inputs/train-set/application_train.csv')
+    test = pd.read_csv('/valohai/inputs/train-set/application_test.csv')
     print('Shapes : ', data.shape, test.shape)
     
     y = data['TARGET']
@@ -211,7 +211,6 @@ def train_model(data_, test_, y_, folds_):
     
     test_['TARGET'] = sub_preds
 
-
     return oof_preds, test_[['SK_ID_CURR', 'TARGET']], feature_importance_df
     
 
@@ -224,10 +223,10 @@ def display_importances(feature_importance_df_):
     
     plt.figure(figsize=(8,10))
     sns.barplot(x="importance", y="feature", 
-                data=best_features.sort_values(by="importance", ascending=True))
+                data=best_features.sort_values(by="importance", ascending=False))
     plt.title('LightGBM Features (avg over folds)')
     plt.tight_layout()
-    plt.savefig('/valohai/outputs/first-submission/lgbm_importances.png')
+    plt.savefig('/valohai/outputs/base-model/lgbm_importances.png')
 
 
 def display_roc_curve(y_, oof_preds_, folds_idx_):
@@ -256,15 +255,7 @@ def display_roc_curve(y_, oof_preds_, folds_idx_):
     plt.legend(loc="lower right")
     plt.tight_layout()
     
-    plt.savefig('/valohai/outputs/first-submission/roc_curve.png')
-
-def display_roc(y_, oof_preds, fold_idx_):
-    plt.figure(figsize =(10,10))
-    score1 = []
-    for n_fold,( _, val_idx) in enumerate(fold_idx_):
-        fpr, tpr, threholds = roc_curve(y_.iloc[val_idx]), oof_preds_[val_idx]
-        score1.
-
+    plt.savefig('roc_curve.png')
 
 
 def display_precision_recall(y_, oof_preds_, folds_idx_):
@@ -293,21 +284,20 @@ def display_precision_recall(y_, oof_preds_, folds_idx_):
     plt.legend(loc="best")
     plt.tight_layout()
     
-    plt.savefig('/valohai/outputs/first-submission/recall_precision_curve.png')
+    plt.savefig('/valohai/outputs/base-model/recall_precision_curve.png')
 
 if __name__ == '__main__':
     gc.enable()
-    # Build model /valohai/inputss
-    data, test, y = build_model_/valohai/inputs()
+    # Build model inputs
+    data, test, y = build_model_input()
     # Create Folds
     folds = KFold(n_splits=5, shuffle=True, random_state=546789)
     # Train model and get oof and test predictions
     oof_preds, test_preds, importances = train_model(data, test, y, folds)
     # Save test predictions
-    test_preds.to_csv('first_submission.csv', index=False)
+    test_preds.to_csv('/valohai/outputs/base-model/first_submission.csv', index=False)
     # Display a few graphs
     folds_idx = [(trn_idx, val_idx) for trn_idx, val_idx in folds.split(data)]
     display_importances(feature_importance_df_=importances)
     display_roc_curve(y_=y, oof_preds_=oof_preds, folds_idx_=folds_idx)
     display_precision_recall(y_=y, oof_preds_=oof_preds, folds_idx_=folds_idx)
-    

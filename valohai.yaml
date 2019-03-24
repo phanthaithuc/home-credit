@@ -1,8 +1,8 @@
 - step:
     image: phanthaithuc/lightgbm:firstcommit
     command: 
-        - python first-submission.py
-        - python train.py 
+        - python base-model.py
+        - python final-model.py 
     
     inputs:
       - name: train-set

@@ -3,16 +3,10 @@
     command: python train.py {parameters}
     
     inputs:
-      - name: train-set
+    - name: train-set
         default: swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/
-   
     - name: test-set
-        default:  swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/HomeCredit_columns_description.csv
-
-        
-        
-
-    
+        default: swift://f8a5dbc8033343aea820c139245afe13/Arcada-data/Home-Credit/HomeCredit_columns_description.csv
     name: Train model
 
 

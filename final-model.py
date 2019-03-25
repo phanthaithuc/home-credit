@@ -387,7 +387,7 @@ def kfold_lightgbm(df, num_folds, stratified = False, debug= False):
         params = {
             'objective': 'binary',
             'boosting_type': 'gbdt',
-            'nthread': 14,
+            'nthread': -1,
             'learning_rate': 0.02,  # 02,
             'num_leaves': 20,
             'colsample_bytree': 0.9497036,

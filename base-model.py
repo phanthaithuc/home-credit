@@ -297,7 +297,7 @@ if __name__ == '__main__':
     # Train model and get oof and test predictions
     oof_preds, test_preds, importances = train_model(data, test, y, folds)
     # Save test predictions
-    test_preds.to_csv('valohai/outputs/base-model/first_submission.csv', index=False)
+    test_preds.to_csv('/valohai/outputs/base-model-submission.csv', index=False)
     # Display a few graphs
     folds_idx = [(trn_idx, val_idx) for trn_idx, val_idx in folds.split(data)]
     display_importances(feature_importance_df_=importances)
